@@ -2,7 +2,7 @@
 // Real RPC + detached print-mode child + parent git integration. Only the HTTP model is scripted.
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
-import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs"
+import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, writeFileSync } from "node:fs"
 import { spawnSync } from "node:child_process"
 import { homedir } from "node:os"
 import { dirname, join, resolve } from "node:path"
@@ -111,6 +111,11 @@ export async function runReflectionRecapE2e(options) {
     const baseUrl = await server.ready
     sandbox = prepareSandbox(options.pluginRoot, baseUrl)
     cleanup.add("sandbox", () => removeSandbox(sandbox, options.keep))
+    const sharedAgentDir = join(sandbox.homeDir, ".omo", "agent")
+    mkdirSync(dirname(sharedAgentDir), { recursive: true })
+    renameSync(sandbox.agentDir, sharedAgentDir)
+    sandbox.agentDir = sharedAgentDir
+    sandbox.sessionsDir = join(sharedAgentDir, "sessions")
     writeConfig(sandbox)
     const env = sandboxEnv(sandbox)
     assertSandboxEnv(sandbox, env)

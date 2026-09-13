@@ -42,7 +42,7 @@ export async function retainRuntime({ sandbox, command, env, session, report }) 
   writeFileSync(modelsPath, JSON.stringify(models))
   const wrapper = join(sandbox.root, "omo-reflection-qa")
   const variables = ["HOME", "USERPROFILE", "SENPI_CODING_AGENT_DIR", "OMO_MEMORY_HOME", "XDG_CONFIG_HOME", "XDG_DATA_HOME", "XDG_CACHE_HOME", "PI_OFFLINE"]
-  writeFileSync(wrapper, `#!/bin/sh\nunset OMO_CODING_AGENT_DIR PI_CODING_AGENT_DIR OMO_PACKAGE_DIR SENPI_PACKAGE_DIR PI_PACKAGE_DIR SENPI_BIN\n${variables.map((name) => `export ${name}=${quote(env[name])}`).join("\n")}\nexec ${[command.file, ...command.prefix].map(quote).join(" ")} "$@"\n`)
+  writeFileSync(wrapper, `#!/bin/sh\nunset OMO_CODING_AGENT_DIR PI_CODING_AGENT_DIR OMO_PACKAGE_DIR SENPI_PACKAGE_DIR PI_PACKAGE_DIR SENPI_BIN\nexport SENPI_RPC_CLIENT_CAPABILITIES='extension_events'\n${variables.map((name) => `export ${name}=${quote(env[name])}`).join("\n")}\nexec ${[command.file, ...command.prefix].map(quote).join(" ")} "$@"\n`)
   chmodSync(wrapper, 0o700)
   return {
     wrapper, providerPid: child.pid, providerUrl: provider.baseUrl, agentDir: sandbox.agentDir,
