@@ -29,7 +29,7 @@ describe("dependency audit parsers", () => {
   })
   test("rejects malformed CLI input when a case can escape the output directory", () => {
     // given
-    const args = ["--phase", "baseline", "--binary", "/bin/omo", "--out", "/tmp/audit", "--case", "../summary"]
+    const args = ["--phase", "baseline", "--binary", "/tmp/audit/native-artifact", "--out", "/tmp/audit", "--case", "../summary"]
     // when / then
     expect(() => parseCaptureArgs(args)).toThrow()
   })
