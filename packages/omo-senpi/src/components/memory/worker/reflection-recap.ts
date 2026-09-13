@@ -27,7 +27,7 @@ export type ReflectionReport =
   | { readonly status: "unavailable"; readonly reason: string }
 
 const outcomeSchema = z.object({
-  version: z.literal(1), runId: z.string(), attempt: z.number().int().positive().optional(),
+  version: z.literal(1), runId: z.string(), attempt: z.number().int().positive(),
   childExit: z.object({ code: z.literal(0), signal: z.null() }), timedOut: z.literal(false),
 })
 const finalSchema = z.object({

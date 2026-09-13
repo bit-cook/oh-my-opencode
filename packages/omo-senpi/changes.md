@@ -1,5 +1,14 @@
 ## 2026-09-13 — Project persisted reflection reports into TUI and RPC
 
+Recap projection requires an explicit positive outcome attempt matching the
+ledger. Two omitted attempt IDs are not proof of the same child execution;
+legacy records without that evidence retain their operational notice.
+
+Bundle import normalization preserves `bun` and namespaced specifiers. Bun's
+ambient builtin catalog includes its own modules; prefixing those with `node:`
+made Bun-generated artifacts disagree with the Node-driven CI freshness check.
+Both launchers must generate identical bytes without relaxing artifact checks.
+
 Committed reflection results derive a bounded, attributed report from existing
 run output and matching finalization artifacts. The completion file remains
 unchanged; only the delivered custom entry carries the presentation projection.

@@ -51,6 +51,17 @@ test.each(["final.json", "abandoned.json"])("#given contradictory %s #when proje
   expect(await readReflectionRecap(item.context, item.record)).toBeUndefined()
 })
 
+test.each(["ledger", "outcome", "both"])("#given missing %s attempt evidence #when projected #then no recap exists", async (missing) => {
+  const item = await fixture()
+  if (missing !== "outcome") {
+    await writeFile(join(item.runDir, "ledger.json"), JSON.stringify({ ...item.ledger, attempt: undefined }))
+  }
+  if (missing !== "ledger") {
+    await writeFile(join(item.runDir, "outcome.json"), JSON.stringify({ ...item.outcome, attempt: undefined }))
+  }
+  expect(await readReflectionRecap(item.context, item.record)).toBeUndefined()
+})
+
 test("#given an integrated ledger without settled phase or final sentinel #when projected #then the live report is available", async () => {
   const item = await fixture()
   expect(await readReflectionRecap(item.context, item.record)).toMatchObject({
