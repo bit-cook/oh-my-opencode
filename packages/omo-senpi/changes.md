@@ -1,3 +1,18 @@
+## 2026-09-13 — Project persisted reflection reports into TUI and RPC
+
+Committed reflection results derive a bounded, attributed report from existing
+run output and matching finalization artifacts. The completion file remains
+unchanged; only the delivered custom entry carries the presentation projection.
+The read-only `omo.memory.reflections` method pages relevant results without
+consuming delivery state. Failed, unchanged and unmerged runs do not become
+learned-memory recaps.
+
+The TUI supports compact and expanded report content without flattening Markdown
+whitespace. The real-runtime QA driver covers actual child commits, exclusions,
+disconnection recovery and source/recipient session switching. Its readiness
+signal is the existing memory binding entry, not an extension-event capability
+that the stdio client did not negotiate.
+
 ## 2026-09-12 — Drop the retired agent-name alias notices
 
 The `omo-config:agent-alias-deprecated` startup warning is removed from `components/config-startup/index.ts` together with its `StartupNotice.kind` discriminator: with the alias gone from senpi-task, `agents.metis` / `agents.momus` are ordinary custom agent keys and there is nothing to deprecate. `components/task/dag-lint.ts` no longer warns on a retired `subagent_type`, and `components/telemetry/omo-native-tools.ts` reports the submitted subagent name (a retired id masks to `custom` like any other unknown name) instead of canonicalizing it first. `scripts/qa/plan-gated-agents-e2e.mjs`'s four alias scenarios become `retired-id` / `team-retired` / `dag-retired` / `retired-config`, each asserting the removal on a real senpi process: the retired id never reaches plan-reviewer, team_create names the submitted id, a workflow route keeps it verbatim, the config key defines a custom agent, and no surface prints a deprecation line.
