@@ -101,6 +101,18 @@ test("#given short file reads #when read #then every byte is collected from offs
   expect(report).toMatchObject({ status: "available", text: item.report })
 })
 
+test("#given an interrupted positional read #when retried #then the same offset yields the recorded report", async () => {
+  const item = await fixture()
+  const offsets: number[] = []
+  const report = await readReflectionReport(item.runDir, async (file, buffer, offset) => {
+    offsets.push(offset)
+    if (offsets.length === 1) throw Object.assign(new Error("interrupted"), { code: "EINTR" })
+    return (await file.read(buffer, offset, buffer.length - offset, offset)).bytesRead
+  })
+  expect(offsets).toEqual([0, 0])
+  expect(report).toMatchObject({ status: "available", text: item.report })
+})
+
 test.each(["replacement", "size change"])("#given a %s during the read #when checked #then changing output is unavailable", async (change) => {
   const item = await fixture()
   const path = join(item.runDir, "child-stdout.log")

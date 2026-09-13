@@ -1,4 +1,4 @@
-import { readdir } from "node:fs/promises"
+import { readdir } from "@oh-my-opencode/memory-core/fs"
 import { join } from "node:path"
 import { z } from "zod"
 import type { MemoryIdentityContext } from "./context"

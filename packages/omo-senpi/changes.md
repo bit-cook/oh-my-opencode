@@ -4,6 +4,11 @@ Recap projection requires an explicit positive outcome attempt matching the
 ledger. Two omitted attempt IDs are not proof of the same child execution;
 legacy records without that evidence retain their operational notice.
 
+Report and page reads use the existing resilient memory filesystem boundary.
+An interrupted positional report read retries the same explicit offset, retaining
+short-read and file-change checks; it does not become a missing report merely
+because a child-reaping signal interrupted the syscall.
+
 Bundle import normalization preserves `bun` and namespaced specifiers. Bun's
 ambient builtin catalog includes its own modules; prefixing those with `node:`
 made Bun-generated artifacts disagree with the Node-driven CI freshness check.

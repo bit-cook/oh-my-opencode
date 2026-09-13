@@ -1,5 +1,4 @@
-import { constants } from "node:fs"
-import { lstat, open, readFile, realpath, type FileHandle } from "node:fs/promises"
+import { constants, lstat, open, readFile, realpath, retryOnEintr, type FileHandle, type Stats } from "@oh-my-opencode/memory-core/fs"
 import { join, relative, isAbsolute } from "node:path"
 import { z } from "zod"
 import { stripTerminalControls } from "@oh-my-opencode/senpi-task/renderer-text"
@@ -103,7 +102,7 @@ export async function readReflectionReport(runDir: string, readChunk: ReadReport
       const buffer = Buffer.alloc(Math.min(opened.size, REFLECTION_REPORT_MAX_BYTES + 1))
       let offset = 0
       while (offset < buffer.length) {
-        const bytesRead = await readChunk(file, buffer, offset)
+        const bytesRead = await retryOnEintr(() => readChunk(file, buffer, offset))
         if (bytesRead === 0) return unavailable("incomplete_output")
         offset += bytesRead
       }
@@ -126,7 +125,7 @@ export async function readReflectionReport(runDir: string, readChunk: ReadReport
   }
 }
 
-function sameFile(left: import("node:fs").Stats, right: import("node:fs").Stats): boolean {
+function sameFile(left: Stats, right: Stats): boolean {
   return right.isFile() && left.dev === right.dev && left.ino === right.ino
     && left.size === right.size && left.mtimeMs === right.mtimeMs && left.ctimeMs === right.ctimeMs
 }
